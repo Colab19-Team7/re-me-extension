@@ -13,7 +13,7 @@
 run the command
 
 ```shell
-$ cd re-me-ext
+$ cd re-me-extension
 
 $ yarn dev
 ```

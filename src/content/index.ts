@@ -6,7 +6,14 @@ console.info("chrome-ext template-react-ts content script");
       message: "Data from Web page",
     },
   });
-  // do something with response here, not outside the function
+
+  // listen for messages from the background script
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("content script received message", request, sender);
+    // chrome.storage.local.set({ "photo-data": request }, function () {});
+    sendResponse(request);
+    return true;
+  });
 })();
 
 export {};

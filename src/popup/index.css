@@ -27,7 +27,7 @@
 
 
 #app {
-  min-width: 20rem;
+  max-width: 20rem;
   margin: 0 auto;
   padding: 0.5rem;
 }
