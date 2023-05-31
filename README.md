@@ -1,12 +1,12 @@
-# re-me-ext
+# Re-Me-Extension
 
 > a chrome extension tools built with Vite + React-ts, and Manifest v3
 
 ## Installing
 
 1. Check if your `Node.js` version is >= **14**.
-2. Change or configurate the name of your extension on `src/manifest`.
-3. Run `npm install` to install the dependencies.
+2. Change or configure the name of your extension on `src/manifest`.
+3. Run `yarn` to install the dependencies.
 
 ## Developing
 
@@ -15,7 +15,7 @@ run the command
 ```shell
 $ cd re-me-ext
 
-$ npm run dev
+$ yarn dev
 ```
 
 ### Chrome Extension Developer Mode
@@ -23,7 +23,7 @@ $ npm run dev
 1. set your Chrome browser 'Developer mode' up
 2. click 'Load unpacked', and select `re-me-ext/build` folder
 
-### Nomal FrontEnd Developer Mode
+### Normal Front-end Developer Mode
 
 1. access `http://localhost:3000/`
 2. when debugging popup page, open `/popup.html`
@@ -34,7 +34,7 @@ $ npm run dev
 After the development of your extension run the command
 
 ```shell
-$ npm build
+$ yarn build
 ```
 
 Now, the content of `build` folder will be the extension ready to be submitted to the Chrome Web Store. Just take a look at the [official guide](https://developer.chrome.com/webstore/publish) to more infos about publishing.
