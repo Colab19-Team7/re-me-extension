@@ -4,7 +4,7 @@ export default defineManifest({
   name: "Re-Me",
   description:
     "Set a reminder to revisit a website. Re-Me will remind you to revisit a website after a set period of time.",
-  version: "0.0.0",
+  version: "0.0.1",
   manifest_version: 3,
   icons: {
     "16": "img/logo-16.png",

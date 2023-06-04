@@ -5,8 +5,7 @@
 ## Installing
 
 1. Check if your `Node.js` version is >= **14**.
-2. Change or configure the name of your extension on `src/manifest`.
-3. Run `yarn` to install the dependencies.
+2. Run `yarn` to install the dependencies.
 
 ## Developing
 
@@ -18,10 +17,43 @@ $ cd re-me-extension
 $ yarn dev
 ```
 
-### Chrome Extension Developer Mode
+### Loading the extension
 
-1. set your Chrome browser 'Developer mode' up
-2. click 'Load unpacked', and select `re-me-ext/build` folder
+<details>
+  <summary>Google Chrome</summary>
+
+In [Google Chrome](https://www.google.com/chrome/), open up [chrome://extensions](chrome://extensions) in a new tab. Make sure the `Developer Mode` checkbox in the upper-right corner is turned on. Click `Load unpacked` and select the `dist` directory in this repository - your extension should now be loaded.
+
+![Installed Extension in Google Chrome](https://i.imgur.com/Y2dQFte.png "Installed Extension in Google Chrome")
+
+</details>
+
+<details>
+  <summary>Brave</summary>
+
+In [Brave](https://brave.com/), open up [brave://extensions](brave://extensions) in a new tab. Make sure the `Developer Mode` checkbox in the upper-right corner is turned on. Click `Load unpacked` and select the `dist` directory in this repository - your extension should now be loaded.
+
+![Installed Extension in Brave](https://i.imgur.com/rKsbtcO.png "Installed Extension in Brave")
+
+</details>
+
+<details>
+  <summary>Mozilla Firefox</summary>
+
+In [Mozilla Firefox](https://www.mozilla.org/en-US/firefox/new/), open up the [about:debugging](about:debugging) page in a new tab. Click the `This Firefox` link in the sidebar. One the `This Firefox` page, click the `Load Temporary Add-on...` button and select the `manifest.json` from the `dist` directory in this repository - your extension should now be loaded.
+
+![Installed Extension in Mozilla Firefox](https://i.imgur.com/FKfTw4B.png "Installed Extension in Mozilla Firefox")
+
+</details>
+
+<details>
+  <summary>Microsoft Edge</summary>
+
+In [Microsoft Edge](https://www.microsoft.com/en-us/edge), open up [edge://extensions](edge://extensions) in a new tab. Make sure the `Developer Mode` checkbox in the lower-left corner is turned on. Click `Load unpacked` and select the `dist` directory in this repository - your extension should now be loaded.
+
+![Installed Extension in Microsoft Edge](https://i.imgur.com/ykesx0g.png "Installed Extension in Microsoft Edge")
+
+</details>
 
 ### Normal Front-end Developer Mode
 

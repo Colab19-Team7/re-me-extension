@@ -6,7 +6,8 @@ export async function getOGImage(url: string) {
   if (ogImage) {
     return ogImage.getAttribute("content");
   } else {
-    throw new Error("No OG image found.");
+    console.log("No OG image found.");
+    return null;
   }
 }
 

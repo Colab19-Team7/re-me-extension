@@ -1,21 +1,73 @@
 import { useEffect, useState } from "react";
 import { getOGImage } from "../utils/getOgImg";
 
-function App() {
-  const [tab, setTab] = useState<chrome.tabs.Tab | null>();
-  const [ogImg, setOgImg] = useState<string | null>(null);
+async function getCurrentTab() {
+  try {
+    const data: {
+      image?: string | null;
+      title?: string;
+      url?: string;
+    } = {};
 
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      console.log(tabs[0]);
-      setTab(tabs[0]);
-      if (tabs[0].url) {
-        getOGImage(tabs[0].url).then((res) => {
-          console.log(res);
-          setOgImg(res);
+    let queryOptions = { active: true, currentWindow: true };
+
+    let [tab] = await chrome.tabs.query(queryOptions);
+
+    if (tab.url) {
+      const imgUrl = await getOGImage(tab.url);
+      data.image = imgUrl;
+    }
+
+    return {
+      title: tab.title,
+      url: tab.url,
+      favIconUrl: tab.favIconUrl,
+      ...data,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const saveLink = (data) => {
+  chrome.runtime.sendMessage({ action: "SAVE_LINK", data }, (response) => {
+    console.log(response);
+  });
+};
+
+function App() {
+  const [tab, setTab] = useState<{
+    image?: string | null;
+    title?: string;
+    url?: string;
+    favIconUrl?: string;
+  } | null>();
+  const [auth, setAuth] = useState<{}>();
+
+  const init = async () => {
+    const currentTab = await getCurrentTab();
+
+    chrome.runtime.sendMessage({ action: "AUTH_CHECK" }, (data) => {
+      const { session, authenticated } = data;
+      if (!authenticated) {
+        return chrome.tabs.create({
+          url: "http://localhost:3000/signin",
         });
       }
+
+      setAuth(session);
+
+      setTab(currentTab);
+
+      saveLink({
+        ...currentTab,
+        token: session.user.token,
+      });
     });
+  };
+
+  useEffect(() => {
+    init();
   }, []);
 
   return (
@@ -30,7 +82,7 @@ function App() {
 
       <div className="flex gap-4">
         <img
-          src={ogImg ?? tab?.favIconUrl}
+          src={tab?.image ?? tab?.favIconUrl}
           alt={tab?.title}
           className="h-16 w-20 border bg-[#878787] object-cover flex-1"
         />
@@ -42,13 +94,6 @@ function App() {
           </a>
         </div>
       </div>
-
-      {/* <select className="w-full bg-[#878787] h-8">
-        <option>Reminder Me</option>
-        <option>Reminder Me</option>
-        <option>Reminder Me</option>
-        <option>Reminder Me</option>
-      </select> */}
     </main>
   );
 }
