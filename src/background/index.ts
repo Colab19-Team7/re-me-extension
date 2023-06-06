@@ -1,41 +1,9 @@
 console.info("chrome-ext re-me background script");
 
-// chrome.tabs.onActivated.addListener(function (activeInfo) {
-//   chrome.tabs.get(activeInfo.tabId, function (tab) {
-//     const { url, title } = tab;
-//     if (tab.status === "complete" && tab.active && tab.id) {
-//       console.log("you are here: " + url);
-//       chrome.tabs.sendMessage(tab.id, { url, title, from: "onActivated" });
-//     }
-//   });
-// });
-
-// chrome.tabs.onUpdated.addListener(async (tabId, change, tab) => {
-//   if (change.status === "complete" && tab.active && tab.id) {
-//     const { url, title } = tab;
-//     try {
-//       const response = chrome.tabs.sendMessage(tab.id, {
-//         url,
-//         title,
-//         from: "onUpdated",
-//       });
-//     } catch (err) {
-//       console.log(err);
-//     }
-//     console.log("you are here: " + tab.url);
-//   }
-// });
-
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   console.log("background script received message", request, sender);
-//   sendResponse(request);
-//   return true;
-// });
-
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "install") {
     chrome.tabs.create({
-      url: "https://re-me.netlify.app/",
+      url: "https://re-me.onrender.com/",
     });
   }
 });
@@ -45,12 +13,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
     case "AUTH_CHECK":
       console.log("running auth check");
 
-      fetch("http://localhost:3000/api/auth/session", {
+      fetch("https://re-me.onrender.com/api/auth/session", {
         mode: "cors",
       })
         .then((res) => res.json())
         .then((res) => {
           onSuccess(res);
+          console.log("auth check success");
         })
         .catch((err) => {
           console.log(err);
@@ -72,11 +41,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
         },
         body: JSON.stringify({
           link: data.url,
+          item_image: data.image,
         }),
       })
         .then((res) => res.json())
         .then((res) => {
           onSuccess(res);
+          console.log("save link success");
         })
         .catch((err) => {
           console.log(err);

@@ -2,8 +2,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 
 export default defineManifest({
   name: "Re-Me",
-  description:
-    "Set a reminder to revisit a website. Re-Me will remind you to revisit a website after a set period of time.",
+  description: "Re-Me reminds you to revisit a website after a set period of time.",
   version: "0.0.1",
   manifest_version: 3,
   icons: {
@@ -15,6 +14,7 @@ export default defineManifest({
   action: {
     default_popup: "popup.html",
     default_icon: "img/logo-48.png",
+    default_title: "Save to Re-Me",
   },
   options_page: "options.html",
   background: {
@@ -23,7 +23,7 @@ export default defineManifest({
   },
   content_scripts: [
     {
-      matches: ["http://*/*", "https://*/*"],
+      matches: ["<all_urls>"],
       js: ["src/content/index.ts"],
     },
   ],
