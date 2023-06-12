@@ -7,6 +7,7 @@ function App() {
   const [tab, setTab] = useState<CurrentTab | null>();
   const [loading, setLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const gotoLibrary = (path?: string) => {
     const url = path ? `https://re-me.onrender.com/${path}` : "https://re-me.onrender.com";
@@ -19,18 +20,29 @@ function App() {
     setLoading(true);
     const currentTab = await getCurrentTab();
 
-    chrome.runtime.sendMessage({ action: "AUTH_CHECK" }, (data) => {
-      const { session, authenticated } = data;
+    chrome.runtime.sendMessage({ action: "AUTH_CHECK" }, async (data) => {
+      const { user, authenticated } = data;
 
-      setTab(currentTab);
-
+      // check auth status and redirect to signin page if not authenticated
       if (!authenticated) return gotoLibrary("signin");
 
-      saveLink({
+      // save the link to the re-me library
+      const res = (await saveLink({
         ...currentTab,
-        token: session.user.token,
-      });
+        token: user.token,
+      })) as any;
 
+      console.log(res);
+
+      if ("errors" in res) {
+        res.errors.includes("limit")
+          ? setError("You have reached the limit of 6 links.")
+          : setError("Something went wrong. Please try again later.");
+        setLoading(false);
+        return;
+      }
+
+      setTab(currentTab);
       setLoading(false);
     });
   };
@@ -44,6 +56,15 @@ function App() {
       <main className="bg-white min-h-screen ">
         <div className="flex justify-center items-center min-h-screen">
           <p>Saving to Re-Me...</p>
+        </div>
+      </main>
+    );
+
+  if (error)
+    return (
+      <main className="bg-white min-h-screen ">
+        <div className="flex justify-center items-center min-h-screen">
+          <p>{error}</p>
         </div>
       </main>
     );

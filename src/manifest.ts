@@ -16,7 +16,7 @@ export default defineManifest({
     default_icon: "img/logo-48.png",
     default_title: "Save to Re-Me",
   },
-  options_page: "options.html",
+  // options_page: "options.html",
   background: {
     service_worker: "src/background/index.ts",
     type: "module",
@@ -33,5 +33,5 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ["activeTab", "tabs"],
+  permissions: ["tabs"],
 });

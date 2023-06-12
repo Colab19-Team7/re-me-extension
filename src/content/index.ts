@@ -1,4 +1,4 @@
-console.info("chrome-ext re-me content script");
+// console.info("chrome-ext re-me content script");
 
 (async () => {
   // const response = await chrome.runtime.sendMessage({

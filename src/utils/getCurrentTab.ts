@@ -11,13 +11,16 @@ export async function getCurrentTab() {
 
     if (tab.url && tab.url.startsWith("http")) {
       const imgUrl = await getOGImage(tab.url);
-      data.image = imgUrl;
+
+      if (imgUrl) {
+        data.image = imgUrl;
+      }
     }
 
     return {
       title: tab.title,
       url: tab.url,
-      favIconUrl: tab.favIconUrl,
+      favIconUrl: tab.favIconUrl, // fallback to default icon if no OG image
       ...data,
     };
   } catch (error) {

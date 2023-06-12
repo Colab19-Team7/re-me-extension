@@ -13,16 +13,17 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
     case "AUTH_CHECK":
       console.log("running auth check");
 
-      fetch("https://re-me.onrender.com/api/auth/session", {
-        mode: "cors",
-      })
+      // fetch("http://localhost:3000/api/auth/session", {
+      //   mode: "cors",
+      // })
+      fetch("https://re-me.onrender.com/api/auth/session")
         .then((res) => res.json())
         .then((res) => {
           onSuccess(res);
           console.log("auth check success");
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err, "auth check failed");
           onSuccess({ error: err });
         });
 
@@ -34,7 +35,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
 
       fetch("https://re-me-api.onrender.com/api/v1/items", {
         method: "POST",
-        mode: "cors",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${data.token}`,
