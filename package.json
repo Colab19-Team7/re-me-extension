@@ -24,7 +24,8 @@
     "@unocss/reset": "^0.52.5",
     "lucide-react": "^0.236.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-use-websocket": "^3.0.0"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.12",

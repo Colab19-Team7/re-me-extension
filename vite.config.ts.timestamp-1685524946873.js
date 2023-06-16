@@ -39,7 +39,7 @@ var manifest_default = defineManifest({
       matches: []
     }
   ],
-  permissions: ["storage", "activeTab", "scripting", "tabs"]
+  permissions: ["storage", "activeTab", "scripting", "tabs", "notifications"]
 });
 
 // src/read_pages_folder.ts
