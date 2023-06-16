@@ -3,7 +3,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 export default defineManifest({
   name: "Re-Me",
   description: "Re-Me reminds you to revisit a website after a set period of time.",
-  version: "0.0.1",
+  version: "0.0.2",
   manifest_version: 3,
   icons: {
     "16": "img/logo-16.png",
