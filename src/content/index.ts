@@ -2,14 +2,22 @@ import Logo from "../assets/re-me.png"
 import { NotificationMessage } from "../types";
 
 (() => {
-  chrome.runtime.sendMessage({action: "AUTH_CHECK"}, (data) => {
-    const {authenticated, user } = data;
 
-    createSocket(user.id);
-  })
+  chrome.storage.local.get(['currentUser'], ({currentUser}) => {
+    if(currentUser) {
+      createSocket(currentUser.id);
+    } else {
+      chrome.runtime.sendMessage({action: "AUTH_CHECK"}, (data) => {
+        const {authenticated, user } = data;
+    
+        chrome.storage.local.set({currentUser: user});
+        createSocket(user.id);
+      })
+    }
+  });
   
-  const createSocket = (user_id:number) => {
-    const socket_url = 'ws://localhost:3000/cable';
+  const createSocket = (user_id: number) => {
+    const socket_url = 'wss://re-me-api.onrender.com/cable';
     let checkServer = true;
     const socket = new WebSocket(socket_url);
 
@@ -54,7 +62,7 @@ import { NotificationMessage } from "../types";
 
     socket.onclose = function (event) {
       checkServer = true
-      setTimeout(() => { createSocket(user_id) }, 20000);
+      setTimeout(() => { createSocket(user_id) }, 50000);
     }
 
     socket.onerror = function (error) {
