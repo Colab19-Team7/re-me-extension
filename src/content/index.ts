@@ -8,9 +8,16 @@ import { NotificationMessage } from "../types";
   //     message: "Data from Web page",
   //   },
   // });
+
+  chrome.runtime.sendMessage({action: "AUTH_CHECK"}, (data) => {
+    const {authenticated, user } = data;
+
+    console.log(user.id);
+    createSocket(2);
+  })
   
   console.log("Chrome extension go in")
-  const createSocket = () => {
+  const createSocket = (user_id:number) => {
     const socket_url = 'ws://localhost:3000/cable';
     const ws_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.Vm8fLva7_5uljYSfLcBW0olGixtjwD4cjGSuYL-pFPg'
     const socket = new WebSocket(socket_url);
@@ -23,7 +30,7 @@ import { NotificationMessage } from "../types";
         command: 'subscribe',
         identifier: JSON.stringify({
           channel: 'NotificationChannel',
-          user_id: 2
+          user_id: user_id
         })
       };
 
@@ -55,15 +62,13 @@ import { NotificationMessage } from "../types";
 
     socket.onclose = function (event) {
       console.log("Disconnected from server");
-      setTimeout(() => { createSocket() }, 5000);
+      setTimeout(() => { createSocket(2) }, 5000);
     }
 
     socket.onerror = function (error) {
       console.log("WebSocket error observed: ", error)
     }
   }
-
-  createSocket();
   // // listen for messages from the background script
   // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   //   console.log("content script received message", request, sender);

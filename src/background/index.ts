@@ -1,7 +1,7 @@
 console.info("chrome-ext re-me background script");
+import Logo from "../assets/logo.png"
 import { NotificationMessage } from "../types";
-let notificationMessage:NotificationMessage;
-
+let notificationMessage: NotificationMessage
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "install") {
     chrome.tabs.create({
@@ -11,12 +11,12 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 });
 
 const createAlarm = (data:NotificationMessage) => {
-  chrome.storage.session.set({notificationMessage: data})
   notificationMessage = data
-
+  console.info("Setting alarms")
   chrome.alarms.create(
     're-me_reminder',
     {
+      delayInMinutes: 0,
       periodInMinutes: 1
     }
   )
@@ -24,8 +24,9 @@ const createAlarm = (data:NotificationMessage) => {
 }
 
 chrome.alarms.onAlarm.addListener(() => {
+  console.info("Setting notification")
   chrome.notifications.create('', notificationMessage.message, () => {})
-  console.info("Notification sent")
+  console.info("Notification sent", notificationMessage)
 })
 
 chrome.notifications.onClicked.addListener(() => {
@@ -39,7 +40,7 @@ chrome.notifications.onClosed.addListener(() => {
   console.info("Clear notication")
 })
 
-chrome.runtime.onMessage.addListener(async function (request, sender, onSuccess) {
+chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
   switch (request.action) {
     case "AUTH_CHECK":
       console.log("running auth check");
@@ -111,8 +112,9 @@ chrome.runtime.onMessage.addListener(async function (request, sender, onSuccess)
 
     case "NOTIFICATION":
       chrome.alarms.clear('re-me_reminder')
+      console.log("Sending notification", request.data)
       createAlarm(request.data)
-      break
+      break;
 
     default:
       break;
