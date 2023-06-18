@@ -56,6 +56,28 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
 
       return true;
 
+    case "REMOVE_LINK":
+      console.log("running remove link");
+      const { id, token } = request.data;
+
+      fetch(`https://re-me-api.onrender.com/api/v1/items/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          onSuccess({ success: true });
+          console.log("remove link success");
+        })
+        .catch((err) => {
+          console.log(err);
+          onSuccess({ error: err });
+        });
+
+      return true;
+
     default:
       break;
   }
