@@ -1,30 +1,20 @@
-// console.info("chrome-ext re-me content script");
-console.log("Chrome extension go out side");
 import Logo from "../assets/re-me.png"
 import { NotificationMessage } from "../types";
-(async () => {
-  // const response = await chrome.runtime.sendMessage({
-  //   payload: {
-  //     message: "Data from Web page",
-  //   },
-  // });
 
+(() => {
   chrome.runtime.sendMessage({action: "AUTH_CHECK"}, (data) => {
     const {authenticated, user } = data;
 
-    console.log(user.id);
-    createSocket(2);
+    createSocket(user.id);
   })
   
-  console.log("Chrome extension go in")
   const createSocket = (user_id:number) => {
     const socket_url = 'ws://localhost:3000/cable';
-    const ws_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.Vm8fLva7_5uljYSfLcBW0olGixtjwD4cjGSuYL-pFPg'
+    let checkServer = true;
     const socket = new WebSocket(socket_url);
 
     // When the socket is opened, we can send data to the server
     socket.onopen = function (event) {
-      console.log("Connected to server");
 
       const msg = {
         command: 'subscribe',
@@ -58,24 +48,19 @@ import { NotificationMessage } from "../types";
         } as NotificationMessage
         chrome.runtime.sendMessage({ action: 'NOTIFICATION', data: demoNotificationOptions })
       }
+
+      checkServer = false;
     }
 
     socket.onclose = function (event) {
-      console.log("Disconnected from server");
-      setTimeout(() => { createSocket(2) }, 5000);
+      checkServer = true
+      setTimeout(() => { createSocket(user_id) }, 20000);
     }
 
     socket.onerror = function (error) {
-      console.log("WebSocket error observed: ", error)
+      // console.log("WebSocket error observed: ", error)
     }
   }
-  // // listen for messages from the background script
-  // chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  //   console.log("content script received message", request, sender);
-  //   // chrome.storage.local.set({ "photo-data": request }, function () {});
-  //   sendResponse(request);
-  //   return true;
-  // });
 })();
 
 export { };
