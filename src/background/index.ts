@@ -1,4 +1,6 @@
 console.info("chrome-ext re-me background script");
+import { NotificationMessage } from "../types";
+let notificationMessage:NotificationMessage;
 
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "install") {
@@ -8,7 +10,36 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
+const createAlarm = (data:NotificationMessage) => {
+  chrome.storage.session.set({notificationMessage: data})
+  notificationMessage = data
+
+  chrome.alarms.create(
+    're-me_reminder',
+    {
+      periodInMinutes: 1
+    }
+  )
+  console.info("Alarms set")
+}
+
+chrome.alarms.onAlarm.addListener(() => {
+  chrome.notifications.create('', notificationMessage.message, () => {})
+  console.info("Notification sent")
+})
+
+chrome.notifications.onClicked.addListener(() => {
+  chrome.alarms.clear('re-me_reminder')
+  chrome.tabs.create({ url: notificationMessage.item_url })
+  console.info("Clear notification")
+})
+
+chrome.notifications.onClosed.addListener(() => {
+  chrome.alarms.clear('re-me_reminder')
+  console.info("Clear notication")
+})
+
+chrome.runtime.onMessage.addListener(async function (request, sender, onSuccess) {
   switch (request.action) {
     case "AUTH_CHECK":
       console.log("running auth check");
@@ -78,9 +109,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
 
       return true;
 
+    case "NOTIFICATION":
+      chrome.alarms.clear('re-me_reminder')
+      createAlarm(request.data)
+      break
+
     default:
       break;
   }
 });
 
-export {};
+console.info("Running createSocket")
+
+export { };

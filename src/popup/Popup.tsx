@@ -89,44 +89,6 @@ function App() {
 
   useEffect(() => {
     init();
-
-    const socket_url = 'wss://re-me-api.onrender.com/cable';
-    const ws_token = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyfQ.Vm8fLva7_5uljYSfLcBW0olGixtjwD4cjGSuYL-pFPg'
-    const socket = new WebSocket(socket_url, ws_token);
-
-    // When the socket is opened, we can send data to the server
-    socket.onopen = function (event) {
-      console.log("Connected to server");
-
-      const msg = {
-        command: 'subscribe',
-        identifier: JSON.stringify({
-          channel: 'NotificationChannel',
-          user_id: 2
-        })
-      };
-
-      socket.send(JSON.stringify(msg));
-    };
-
-    socket.onmessage = function (event) {
-      const data = JSON.parse(event.data)
-      // console.log("Received data from server", event.data)
-      if (data.type === 'ping') return
-      if (data.type === 'welcome') return
-
-      if (data.message) {
-        console.log(data.message)
-      }
-    }
-
-    socket.onclose = function (event) {
-      console.log("Disconnected from server");
-    }
-
-    socket.onerror = function (error) {
-      console.log("WebSocket error observed: ", error)
-    }
   }, []);
 
   if (error)
