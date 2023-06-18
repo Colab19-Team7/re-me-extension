@@ -2,6 +2,7 @@ console.info("chrome-ext re-me background script");
 import Logo from "../assets/logo.png"
 import { NotificationMessage } from "../types";
 let notificationMessage: NotificationMessage
+
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "install") {
     chrome.tabs.create({
@@ -12,7 +13,6 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 
 const createAlarm = (data:NotificationMessage) => {
   notificationMessage = data
-  console.info("Setting alarms")
   chrome.alarms.create(
     're-me_reminder',
     {
@@ -24,9 +24,8 @@ const createAlarm = (data:NotificationMessage) => {
 }
 
 chrome.alarms.onAlarm.addListener(() => {
-  console.info("Setting notification")
   chrome.notifications.create('', notificationMessage.message, () => {})
-  console.info("Notification sent", notificationMessage)
+  console.info("Notification sent")
 })
 
 chrome.notifications.onClicked.addListener(() => {
@@ -37,7 +36,7 @@ chrome.notifications.onClicked.addListener(() => {
 
 chrome.notifications.onClosed.addListener(() => {
   chrome.alarms.clear('re-me_reminder')
-  console.info("Clear notication")
+  console.info("Clear notification")
 })
 
 chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
@@ -112,7 +111,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
 
     case "NOTIFICATION":
       chrome.alarms.clear('re-me_reminder')
-      console.log("Sending notification", request.data)
       createAlarm(request.data)
       break;
 
@@ -120,7 +118,5 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
       break;
   }
 });
-
-console.info("Running createSocket")
 
 export { };
