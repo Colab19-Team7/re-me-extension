@@ -1,6 +1,7 @@
 import { Check, List } from "lucide-react";
 import { useEffect, useState } from "react";
 import LoaderIcon from "../assets/loaderIcon";
+import ErrorComp from "../components/LimitError";
 import { CurrentTab } from "../types";
 import { getCurrentTab, saveLink } from "../utils";
 import "./Popup.css";
@@ -51,7 +52,7 @@ function App() {
 
       if ("errors" in res) {
         res.errors.includes("limit")
-          ? setError("You have reached the limit of 6 links.")
+          ? setError("YOU HAVE REACHED THE LIMIT OF 6 SAVED REMINDER BOOKMARKS")
           : res.errors.includes("Item link has already been saved")
           ? setError("This link has already been saved.")
           : setError("Something went wrong. Please try again later.");
@@ -91,14 +92,7 @@ function App() {
     init();
   }, []);
 
-  if (error)
-    return (
-      <main className="text-white min-h-screen ">
-        <div className="flex justify-center items-center min-h-screen">
-          <p>{error}</p>
-        </div>
-      </main>
-    );
+  if (error) return <ErrorComp error={error} />;
 
   return (
     <main className="space-y-2 bg-[#202124]">
