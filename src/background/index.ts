@@ -1,4 +1,7 @@
 console.info("chrome-ext re-me background script");
+import Logo from "../assets/logo.png"
+import { NotificationMessage } from "../types";
+let notificationMessage: NotificationMessage
 
 chrome.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === "install") {
@@ -7,6 +10,34 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
     });
   }
 });
+
+const createAlarm = (data:NotificationMessage) => {
+  notificationMessage = data
+  chrome.alarms.create(
+    're-me_reminder',
+    {
+      delayInMinutes: 0,
+      periodInMinutes: 1
+    }
+  )
+  console.info("Alarms set")
+}
+
+chrome.alarms.onAlarm.addListener(() => {
+  chrome.notifications.create('', notificationMessage.message, () => {})
+  console.info("Notification sent")
+})
+
+chrome.notifications.onClicked.addListener(() => {
+  chrome.alarms.clear('re-me_reminder')
+  chrome.tabs.create({ url: notificationMessage.item_url })
+  console.info("Clear notification")
+})
+
+chrome.notifications.onClosed.addListener(() => {
+  chrome.alarms.clear('re-me_reminder')
+  console.info("Clear notification")
+})
 
 chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
   switch (request.action) {
@@ -78,9 +109,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, onSuccess) {
 
       return true;
 
+    case "NOTIFICATION":
+      chrome.alarms.clear('re-me_reminder')
+      createAlarm(request.data)
+      break;
+
     default:
       break;
   }
 });
 
-export {};
+export { };
