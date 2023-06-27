@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import './Options.css'
+import { useState } from "react";
+import "./Options.css";
 
 function App() {
-  const [crx, setCrx] = useState('create-chrome-ext')
+  const [crx, setCrx] = useState("create-chrome-ext");
 
   return (
     <main>
@@ -15,7 +15,7 @@ function App() {
         Power by {crx}
       </a>
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
