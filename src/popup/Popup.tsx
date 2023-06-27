@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import LoaderIcon from "../assets/loaderIcon";
 import ErrorComp from "../components/LimitError";
 import { CurrentTab } from "../types";
-import { getCurrentTab, saveLink } from "../utils";
+import { getCurrentTab, gotoLibrary, saveLink } from "../utils";
 import "./Popup.css";
 
 function App() {
@@ -14,13 +14,6 @@ function App() {
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [item, setItem] = useState<any>(null);
-
-  const gotoLibrary = (path?: string) => {
-    const url = path ? `https://re-me.onrender.com/${path}` : "https://re-me.onrender.com";
-    chrome.tabs.create({
-      url,
-    });
-  };
 
   const onUndo = async (data: { id: string; token: string }) => {
     setRemoving(true);

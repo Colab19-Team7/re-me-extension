@@ -1,4 +1,5 @@
 import { List } from "lucide-react";
+import { gotoLibrary } from "../utils";
 
 function ErrorComp({ error }: { error: string }) {
   return (
@@ -10,7 +11,7 @@ function ErrorComp({ error }: { error: string }) {
       <div className="flex flex-col gap-2 py-2 px-3">
         <div className="h-[2px] bg-[#2A2A2A]" />
 
-        <a title="Library" className="w-fit cursor-pointer" onClick={() => {}}>
+        <a title="Library" className="w-fit cursor-pointer" onClick={() => gotoLibrary()}>
           <List className="h-6 w-6" strokeWidth={3} color="#FFEC78" />
         </a>
       </div>
